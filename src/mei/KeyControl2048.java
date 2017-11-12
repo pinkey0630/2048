@@ -17,7 +17,8 @@ public class KeyControl2048 implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        newGame.movement(e.getKeyCode());
+        newGame.Calculation(e.getKeyCode());
+        System.out.println("key");
     }
 
     @Override

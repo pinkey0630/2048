@@ -37,7 +37,7 @@ public class Block {
     {
         int value = game.panel.sideValue();
         String letter = Integer.toString(number);
-        g.setColor(Color.PINK);
+        g.setColor(color);
         g.fillRect(row * value/4, column * value / 4,
                 value / 4 , value/4 );
         g.setColor(Color.BLACK);

@@ -8,7 +8,7 @@ public class Game2048 {
 
     JPanel2048 panel;
     Block[][] game2048 = new Block[4][4];
-    boolean gameover = false;
+    boolean gameOver = false;
     public Game2048() {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
@@ -31,30 +31,38 @@ public class Game2048 {
 
     //move blocks and add numbers when two neighbor blocks have the same number
     public void Calculation(int keyCode) {
-        if(gameover)
+        if(gameOver)
             return;
         switch (keyCode) {
             //left arrow key, i-column, j-row;
             case 37:
                 System.out.println("left");
-                for (int i = 1; i < 4; i++) {
+                for (int z = 1; z < 4; z++) {
+                    int i = z;
                     for (int j = 0; j < 4; j++) {
                         //if (winOrLose(i, j) == false) break;
                         if (i > 0 && game2048[i][j] != null) {
-                            if (game2048[i-1][j] == null) {
-                                while (i > 0 && game2048[i-1][j] == null) {
-                                    game2048[i-1][j] = game2048[i][j];
-                                    game2048[i][j] = null;
-                                    game2048[i-1][j].row = game2048[i-1][j].row - 1;
+                            //if (game2048[i-1][j] == null) {
+                                while (i > 0) {
+                                    if (game2048[i-1][j] == null) {
+                                        game2048[i - 1][j] = game2048[i][j];
+                                        game2048[i][j] = null;
+                                        game2048[i - 1][j].row = game2048[i - 1][j].row - 1;
+                                    }
+                                    else if (game2048[i-1][j].number == game2048[i][j].number) {
+                                        game2048[i-1][j].number += game2048[i][j].number;
+                                        game2048[i][j] = null;
+                                    }
                                     i--;
+                                    System.out.println("a");
                                 }
-                            } else if (game2048[i-1][j].number == game2048[i][j].number) {
-                                    game2048[i-1][j].number += game2048[i][j].number;
-                                    game2048[i][j] = null;
-                                    i--;
-                                }
+
+                          //  }
+                            System.out.println("b");
                         }
+                        System.out.println("c");
                     }
+                    System.out.println("aaaaaaa");
                 }
                 break;
             //up arrow key, i-column, j-row
@@ -137,7 +145,7 @@ public class Game2048 {
         panel.repaint();
         if (winOrLose())
         {
-            gameover = true;
+            gameOver = true;
         }
     }
     //win or lose condition

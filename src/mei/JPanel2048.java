@@ -13,9 +13,6 @@ public class JPanel2048 extends JPanel {
         newGame2048.panel = this;
     }
     public void paint(Graphics g) {
-//        int small = 0;
-//        int f_height = 0;
-//        int f_width = 0;
 
         int side = this.getWidth();
         g.setColor(Color.WHITE);
@@ -36,43 +33,6 @@ public class JPanel2048 extends JPanel {
         g.drawLine(side, 0, side, side);
         //draw blocks
         drawBlocks(g);
-//        if(this.getWidth() < this.getHeight()) {
-//            small = this.getWidth();
-//            f_height = this.getHeight();
-//            g.fillRect(0, (f_height - small)/2, small, small);
-//            g.setColor(Color.BLACK);
-//            //heng xian
-//            g.drawLine(0, (f_height - small)/2, small, (f_height - small)/2);
-//            g.drawLine(0, (f_height - small)/2 + small/4, small, (f_height - small)/2 + small/4);
-//            g.drawLine(0, (f_height - small)/2 + small/2, small, (f_height - small)/2 + small/2);
-//            g.drawLine(0, (f_height - small)/2 + small*3/4, small, (f_height - small)/2 + small*3/4);
-//            g.drawLine(0, (f_height - small)/2 + small, small, (f_height - small)/2 + small);
-//            //shu xian
-//            g.drawLine(0, (f_height - small)/2, 0, (f_height - small)/2 + small);
-//            g.drawLine(small/4, (f_height - small)/2, small/4, (f_height - small)/2 + small);
-//            g.drawLine(small/2, (f_height - small)/2, small/2, (f_height - small)/2 + small);
-//            g.drawLine(small*3/4, (f_height - small)/2, small*3/4, (f_height - small)/2 + small);
-//            g.drawLine(small, (f_height - small)/2, small, (f_height - small)/2 + small);
-//        }else if(this.getWidth() > this.getHeight()){
-//            small = this.getHeight();
-//            f_width = this.getWidth();
-//            g.fillRect((f_width - small)/2, 0, small, small);
-//            g.setColor(Color.BLACK);
-//            //heng xian
-//            g.drawLine((f_width - small)/2, 0, (f_width - small)/2 + small, 0);
-//            g.drawLine((f_width - small)/2, small/4, (f_width - small)/2 + small, small/4);
-//            g.drawLine((f_width - small)/2, small/2, (f_width - small)/2 + small, small/2);
-//            g.drawLine((f_width - small)/2, small*3/4, (f_width - small)/2 + small, small*3/4);
-//            g.drawLine((f_width - small)/2, small, (f_width - small)/2 + small, small);
-//            //shu xian
-//            g.drawLine((f_width - small)/2, 0, (f_width - small)/2, small);
-//            g.drawLine((f_width - small)/2 + small/4, 0, (f_width - small)/2 + small/4, small);
-//            g.drawLine((f_width - small)/2 + small/2, 0, (f_width - small)/2 + small/2, small);
-//            g.drawLine((f_width - small)/2 + small*3/4, 0, (f_width - small)/2 + small*3/4, small);
-//            g.drawLine((f_width - small)/2 + small, 0, (f_width - small)/2 + small, small);
-//
-//        }
-
     }
 
     public void drawBlocks(Graphics g)
@@ -81,8 +41,8 @@ public class JPanel2048 extends JPanel {
         {
             for (int j = 0; j < 4; j++)
             {
-                if (newGame2048.game2048[i][j] != null)
-                {   newGame2048.game2048[i][j].drawMe(g);
+                if (newGame2048.game[i][j] != null)
+                {   newGame2048.game[i][j].drawMe(g);
                 }
             }
         }

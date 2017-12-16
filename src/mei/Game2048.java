@@ -3,17 +3,33 @@ package mei;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.awt.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Stack;
 
 public class Game2048 {
 
     JPanel2048 panel;
     Block[][] game = new Block[4][4];
-    boolean gameover = false;
-    public Game2048() {
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
+    boolean gameOver = false;
+    int score = 0;
+    int highestScore = 0;
+//    public Game2048() {
+//        for (int i = 0; i < 4; i++)
+//            for (int j = 0; j < 4; j++)
+//                game[i][j] = null;
+//    }
+
+    public void newGame() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 game[i][j] = null;
+            }
+        }
     }
+
+
     // random generate a block
     public void randomGenerator() {
         int row = (int) (Math.random() * 4);
@@ -23,17 +39,16 @@ public class Game2048 {
             col = (int) (Math.random() * 4);
         }
         if ((int) (Math.random() * 2) == 0) {
-            game[row][col] = new Block(2, row, col,
-                    new Color(255,230,210), this);
+            game[row][col] = new Block(2, row, col, new Color(250,228,228), this);
         } else
             game[row][col] = new Block(4, row, col,
-                    new Color(255,220,200), this);
+                    new Color(247,210,210), this);
     }
 
 
     //move blocks and add numbers when two neighbor blocks have the same number
-    public void Calculation(int keyCode) {
-        if(gameover)
+    public void Calculation(int keyCode) throws IOException {
+        if(gameOver)
             return;
         switch (keyCode) {
             //left arrow key, i-column, j-row;
@@ -51,12 +66,14 @@ public class Game2048 {
                                     while (i > 0 && game[i-1][j] != null
                                             && blockValue(i-1,j) == blockValue(i,j)) {
                                         game[i-1][j].number += game[i][j].number;
+                                        score += blockValue(i-1, j);
                                         game[i][j] = null;
                                         i--;
                                     }
                                 }
                             } else if (blockValue(i-1,j) == blockValue(i,j)) {
                                 game[i-1][j].number += game[i][j].number;
+                                score += blockValue(i-1, j);
                                 game[i][j] = null;
                                 i--;
                             }
@@ -80,12 +97,14 @@ public class Game2048 {
                                     while (j > 0 && game[i][j-1] != null
                                             && blockValue(i,j-1) == blockValue(i,j)) {
                                         game[i][j-1].number += game[i][j].number;
+                                        score += blockValue(i,j-1);
                                         game[i][j] = null;
                                         j--;
                                     }
                                 }
                             } else if (blockValue(i,j-1) == blockValue(i,j)) {
                                 game[i][j-1].number += game[i][j].number;
+                                score += blockValue(i,j-1);
                                 game[i][j] = null;
                                 j--;
                             }
@@ -108,12 +127,14 @@ public class Game2048 {
                                     while (i < 3 && game[i+1][j] != null
                                             && blockValue(i+1,j) == blockValue(i,j)) {
                                         game[i+1][j].number += game[i][j].number;
+                                        score += blockValue(i+1,j);
                                         game[i][j] = null;
                                         i++;
                                     }
                                 }
                             } else if (blockValue(i+1,j) == blockValue(i,j)) {
                                 game[i+1][j].number += game[i][j].number;
+                                score += blockValue(i+1,j);
                                 game[i][j] = null;
                                 i++;
                             }
@@ -138,12 +159,14 @@ public class Game2048 {
                                     while (j < 3 && game[i][j+1] != null &&
                                             blockValue(i,j+1) == blockValue(i,j)) {
                                         game[i][j+1].number += game[i][j].number;
+                                        score += blockValue(i, j+1);
                                         game[i][j] = null;
                                         j++;
                                     }
                                 }
                             } else if (blockValue(i,j+1) == blockValue(i,j)) {
                                 game[i][j+1].number += game[i][j].number;
+                                score += blockValue(i, j+1);
                                 game[i][j] = null;
                                 j++;
                             }
@@ -161,16 +184,22 @@ public class Game2048 {
         panel.repaint();
         if (winOrLose())
         {
-            gameover = true;
+            writeToFile();
+//            if (score > highestScore)
+//                highestScore = score;
+            System.out.println(score);
+            gameOver = true;
+            panel.repaint();
         }
     }
     //win or lose condition
-    public boolean winOrLose() {
+    public boolean winOrLose() throws IOException {
         int count = 0;
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
                 if (game[row][col] != null && game[row][col].number == 2048) {
-                    return false;
+                    writeToFile();
+                    return true;
                 } else if (game[row][col] != null) {
                     count++;
                 }
@@ -212,4 +241,49 @@ public class Game2048 {
         return game[rol][col].number;
     }
 
+    public void writeToFile() throws IOException {
+        File file = new File("/Users/pinkey/Desktop/2048/score.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        DataOutputStream writer = new DataOutputStream(new FileOutputStream(file, true));
+        byte[] highScore = String.valueOf(score).getBytes();
+        writer.write(highScore);
+        writer.write('\n');
+        writer.close();
+    }
+
+    public int readFromFile() throws FileNotFoundException, IOException {
+        ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
+        File file = new File("/Users/pinkey/Desktop/2048/score.txt");
+        FileReader reader = new FileReader(file);
+        BufferedReader br = new BufferedReader(reader);
+        String line;
+        while ((line = br.readLine()) != null) {
+            scoreHistory.add(Integer.parseInt(line));
+        }
+        highestScore = scoreHistory.get(0);
+        for (int i = 0; i < scoreHistory.size(); i++) {
+            if (scoreHistory.get(i) > highestScore)
+                highestScore = scoreHistory.get(i);
+        }
+        reader.close();
+        return highestScore;
+    }
+
+
+//    public int highestScore(int num) {
+//        Stack<Integer> stack = new Stack<Integer>();
+//        Stack<Integer> maxStack = new Stack<Integer>();
+//        stack.push(num);
+//        if (maxStack.isEmpty())
+//            maxStack.push(num);
+//
+//        else
+//            maxStack.push(Math.max(num, maxStack.peek()));
+//        highestScore = maxStack.peek();
+//
+//        return highestScore;
+//    }
 }
+

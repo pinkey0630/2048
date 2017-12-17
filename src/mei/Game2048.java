@@ -15,11 +15,6 @@ public class Game2048 {
     boolean gameOver = false;
     int score = 0;
     int highestScore = 0;
-//    public Game2048() {
-//        for (int i = 0; i < 4; i++)
-//            for (int j = 0; j < 4; j++)
-//                game[i][j] = null;
-//    }
 
     public void newGame() {
         for (int i = 0; i < 4; i++) {
@@ -184,9 +179,9 @@ public class Game2048 {
         panel.repaint();
         if (winOrLose())
         {
+            if (score > highestScore)
+                highestScore = score;
             writeToFile();
-//            if (score > highestScore)
-//                highestScore = score;
             System.out.println(score);
             gameOver = true;
             panel.repaint();
@@ -246,44 +241,20 @@ public class Game2048 {
         if (!file.exists()) {
             file.createNewFile();
         }
-        DataOutputStream writer = new DataOutputStream(new FileOutputStream(file, true));
-        byte[] highScore = String.valueOf(score).getBytes();
+        DataOutputStream writer = new DataOutputStream(new FileOutputStream(file));
+        byte[] highScore = String.valueOf(highestScore).getBytes();
         writer.write(highScore);
         writer.write('\n');
         writer.close();
     }
 
     public int readFromFile() throws FileNotFoundException, IOException {
-        ArrayList<Integer> scoreHistory = new ArrayList<Integer>();
         File file = new File("/Users/pinkey/Desktop/2048/score.txt");
         FileReader reader = new FileReader(file);
         BufferedReader br = new BufferedReader(reader);
-        String line;
-        while ((line = br.readLine()) != null) {
-            scoreHistory.add(Integer.parseInt(line));
-        }
-        highestScore = scoreHistory.get(0);
-        for (int i = 0; i < scoreHistory.size(); i++) {
-            if (scoreHistory.get(i) > highestScore)
-                highestScore = scoreHistory.get(i);
-        }
+        highestScore = Integer.parseInt(br.readLine());
         reader.close();
         return highestScore;
     }
-
-
-//    public int highestScore(int num) {
-//        Stack<Integer> stack = new Stack<Integer>();
-//        Stack<Integer> maxStack = new Stack<Integer>();
-//        stack.push(num);
-//        if (maxStack.isEmpty())
-//            maxStack.push(num);
-//
-//        else
-//            maxStack.push(Math.max(num, maxStack.peek()));
-//        highestScore = maxStack.peek();
-//
-//        return highestScore;
-//    }
 }
 

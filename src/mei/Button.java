@@ -31,6 +31,7 @@ public class Button extends JButton implements ActionListener {
         System.out.println("Restart the game");
         game.newGame();
         game.gameOver = false;
+        game.score = 0;
         game.randomGenerator();
         try {
             game.readFromFile();
